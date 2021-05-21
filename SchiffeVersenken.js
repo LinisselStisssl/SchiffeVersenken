@@ -8,45 +8,23 @@ document.addEventListener('DOMContentLoaded', function () {
 		.addEventListener('click', NewGame);
 
         var SchiffeH = [2, 3 , 3 , 4 , 5 ];
-        var current = 5 ;
+        var verfügbareSchiffe = 5 ;
 
-        function checkShipsPlaced() {
-            var fields = document.querySelectorAll('#gameboardHome button'), // fields ist die Liste unserer Felder
-                placed = true; // wir gehen davon aus, dass alle Zellen benutzt wurden
-            // alle Felder markiert?
-            for (var i = 0; i < SchiffeH.length; i++) {
-                if (!SchiffeH[i].hasAttribute('disabled')) {
-                    placed = false;
+        
+        function markFieldH(e) {
+            var field = e.target;
+            var Felder;
+            while (verfügbareSchiffe > 0) 
+            {hintH.innerText = 'Setzen sie jetzt Ihr ' + SchiffeH[verfügbareSchiffe-1] + 'er Schiff.';
+                Felder=SchiffeH[verfügbareSchiffe-1];
+                while (Felder > 1) {
+                   field.setAttribute('aria-label', "y");
+                   field.setAttribute('disabled', 'disabled');
+                   field.setAttribute('value', 'S');  
+                   Felder--;
                 }
-            }
-        }
-        function markFieldH(e) {
-            var field = e.target;
-            field.setAttribute('aria-label', "y");
-            field.setAttribute('disabled', 'disabled');
-            checkShipsPlaced();
-        }
-
-        function SchiffeSetzen(e) {
-            var field = e.target;
-            field.setAttribute('aria-label', "y");
-            field.setAttribute('disabled', 'disabled');
-            if (current > 0) 
-               {hintH.innerText = 'Setzen sie jetzt Ihr ' + SchiffeH[current] + 'er Schiff.';
-                current = current-1;
-                } 
-        }
-
-
-        function markFieldH(e) {
-            var field = e.target;
-            field.setAttribute('aria-label', "y");
-            field.setAttribute('disabled', 'disabled');
-            field.setAttribute('value', 'S');
-            if (current > 0) 
-               {hintH.innerText = 'Setzen sie jetzt Ihr' + SchiffeH[current] + ' Schiff.';
-                current = current-1;
-                } 
+                verfügbareSchiffe--;
+            } 
         }
 
         document.querySelector('#gameboardEnemy')
