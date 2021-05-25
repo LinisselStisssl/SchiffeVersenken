@@ -1,14 +1,14 @@
 .SchiffeVersenken #gameboardHome {
-    width: 50vmin;
-    height: 50vmin;
+    width: 55vmin;
+    height: 55vmin;
     display: grid;
     grid-template-columns: repeat(11, 1fr);
     gap: 0;
   }
   
   .SchiffeVersenken #gameboardEnemy {
-    width: 50vmin;
-    height: 50vmin;
+    width: 55vmin;
+    height: 55vmin;
     display: grid;
     grid-template-columns: repeat(11, 1fr);
     gap: 0;

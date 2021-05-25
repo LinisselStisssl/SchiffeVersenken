@@ -6,12 +6,15 @@ document.addEventListener('DOMContentLoaded', function () {
         var SchiffeH = [2, 3, 3, 4, 5],
             SchiffsIndex = 4,
             Schiffgroesse,
+            SchiffgroesseE,
             SchiffsRichtung,
             letzterClick,
             NumSchiffsFelder = 0,
-            SchiffsFelder = [],  
+            SchiffsFelder = [], 
+            StartFeld,
+            SchiffE = [],
             fields = document.querySelectorAll('#gameboardHome button'); // fields ist die Liste unserer Felder
-
+            fieldsE = document.querySelectorAll('#gameboardEnemy button'); // fields ist die Liste unserer Felder
 
         function markFieldH(e) {
             var field = e.target,
@@ -25,17 +28,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (fi == SchiffsFelder[NumSchiffsFelder-1]+1) { // ermittle die Richtung in welcher sich das Boot ausdehnt{  // Ausdehnung nach rechts 
                     SchiffsRichtung = 'waagrecht';
                     
-                    if (fields[fi+1].getAttribute('aria-label')=='l') {
+                    if (fi < 120 && fields[fi+1].getAttribute('aria-label')=='l') {
                         nachbarn.push((fi+1));
                         fields[fi+1].setAttribute('aria-label', "v");
                         fields[fi+1].disabled = false ;           } // rechter nachbar
                     fields[letzterClick-11].disabled = true;
                     fields[letzterClick-11].setAttribute('aria-label', "l");
-                    fields[letzterClick+11].disabled = true;
-                    fields[letzterClick+11].setAttribute('aria-label', "l");
-                    if (NumSchiffsFelder == 1) {
-                            
-                    }        
+                    if (letzterClick < 110){
+                        fields[letzterClick+11].disabled = true;
+                        fields[letzterClick+11].setAttribute('aria-label', "l");
+                    }       
                 }         
                 if (fi == SchiffsFelder[0]-1) { // ermittle die Richtung in welcher sich das Boot ausdehnt{  // Ausdehnung nach links
                     SchiffsRichtung = 'waagrecht';
@@ -45,8 +47,11 @@ document.addEventListener('DOMContentLoaded', function () {
                         fields[fi-1].disabled = false;                   } // linker nachbar
                     fields[letzterClick-11].disabled = true;
                     fields[letzterClick-11].setAttribute('aria-label', "l");
-                    fields[letzterClick+11].disabled = true; 
-                    fields[letzterClick+11].setAttribute('aria-label', "l");         
+                    if (letzterClick < 110){
+                        fields[letzterClick+11].disabled = true; 
+                        fields[letzterClick+11].setAttribute('aria-label', "l");
+                    }
+                             
                 }
                 if (fi == SchiffsFelder[NumSchiffsFelder-1]+11) { // ermittle die Richtung in welcher sich das Boot ausdehnt{  // Ausdehnung nach unten 
                     SchiffsRichtung = 'senkrecht';
@@ -56,8 +61,11 @@ document.addEventListener('DOMContentLoaded', function () {
                         fields[fi+11].disabled = false;                   } // unterer nachbar
                     fields[letzterClick-1].disabled = true;// disable waagrechte Nachbarn
                     fields[letzterClick-1].setAttribute('aria-label', "l");
-                    fields[letzterClick+1].disabled = true; 
-                    fields[letzterClick+1].setAttribute('aria-label', "l");         
+                    if (letzterClick < 120){
+                        fields[letzterClick+1].disabled = true; 
+                        fields[letzterClick+1].setAttribute('aria-label', "l");
+                    }
+                             
                 }         
                 if (fi == SchiffsFelder[0]-11) { // ermittle die Richtung in welcher sich das Boot ausdehnt{  // Ausdehnung nach oben
                     SchiffsRichtung = 'senkrecht';
@@ -67,8 +75,10 @@ document.addEventListener('DOMContentLoaded', function () {
                         fields[fi-11].disabled = false;                   } // oberer nachbar
                     fields[letzterClick-1].disabled = true;   // disable senkrechte Nachbarn
                     fields[letzterClick-1].setAttribute('aria-label', "l");
-                    fields[letzterClick+1].disabled = true;
-                    fields[letzterClick+1].setAttribute('aria-label', "l");          
+                    if (letzterClick < 120){
+                        fields[letzterClick+1].disabled = true;
+                        fields[letzterClick+1].setAttribute('aria-label', "l"); 
+                    }         
                 }                
   
                 // das gwählte Feld wird gesetzt  
@@ -91,7 +101,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 field.disabled = true;
                 // jetzt werden alle angrenzenden Felder ermittelt und das 'locked label durch ein v =  valid ersetzt
                 if (!fields[fi-1].disabled) {nachbarn.push((fi-1));fields[fi-1].setAttribute('aria-label', "v");   } // linker nachbar
-                if (!fields[fi+1].disabled) {nachbarn.push((fi+1));fields[fi+1].setAttribute('aria-label', "v");} // rechter nachbar                
+            
+                if (fi < 120 && !fields[fi+1].disabled) {nachbarn.push((fi+1));fields[fi+1].setAttribute('aria-label', "v");} // rechter nachbar                
                 if (!fields[fi-11].disabled) { nachbarn.push((fi-11)); fields[fi-11].setAttribute('aria-label', "v");} // oberer nachbar
                 if (fi < 110 && !fields[fi+11].disabled) { nachbarn.push((fi+11)); fields[fi+11].setAttribute('aria-label', "v");} // unterer nachbar
                  
@@ -115,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (SchiffsRichtung == 'senkrecht'){
                         if (fields[sf-1].getAttribute('aria-label') == "l") {
                             fields[sf-1].setAttribute('aria-label', "u");}
-                        if (fields[sf+1].getAttribute('aria-label') == "l") {
+                        if (sf < 120 && fields[sf+1].getAttribute('aria-label') == "l") {
                             fields[sf+1].setAttribute('aria-label', "u");}    
                         }    
                 }  
@@ -134,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }                
                 sf = SchiffsFelder[SchiffsFelder.length-1];                  
                 if (SchiffsRichtung == 'waagrecht'){
-                    if (fields[sf+1].getAttribute('aria-label') == "v") {
+                    if (sf < 120 && fields[sf+1].getAttribute('aria-label') == "v") {
                         fields[sf+1].setAttribute('aria-label', "u");
                         fields[sf+1].disabled=true;
                     }
@@ -162,8 +173,41 @@ document.addEventListener('DOMContentLoaded', function () {
                     for (var i = 0; i < fields.length; i++) {
                         fields[i].disabled = true;
                     }
-                }
 
+                    //jetzt setzt der Computer seine Schiffe
+                    for (let index = SchiffeH.length; index > 0; index--) {
+                        const SchiffgroesseE = SchiffeH[index -1];
+
+                        StartFeld = Math.round(Math.random()*108)+12;//Zufalls Zahl zwischen 12 und 120
+                        SchiffE.push(StartFeld);
+                        var Richtung = Math.round(Math.random());//Zufalls Zahl 0 = waagerecht, 1 = senkrecht
+                        if (Richtung == 0) {
+                            for (let l = 1; l < SchiffgroesseE; l++) {
+                                SchiffE.push(StartFeld + l);
+                            }
+                        }
+                        if (Richtung == 1) {
+                            for (let l = 1; l < SchiffgroesseE; l++) {
+                                SchiffE.push(StartFeld + l*11);
+                            }
+                        }
+                        //prüfung ob die Plazierung gültig ist
+                        var Schiffgültig = true;
+                        for (let i = 0; i < SchiffE.length -1; i++) {
+                            sf = SchiffE[i];
+                            if ((fields[sf].disabled == true)||(sf > 120)) {Schiffgültig=false}
+                        }
+                        if (Schiffgültig == true) { 
+                            for (let i = 0; i < SchiffE.length -1; i++) {
+                                sf = SchiffE[i];
+                                fieldsE[sf].setAttribute('aria-label', "c"); // das gewählte Feld wird gesetzt
+                                fieldsE[sf].disabled = true;
+                            } 
+                            
+                             
+                        }       
+                    }
+                }
             }    
         }
 
