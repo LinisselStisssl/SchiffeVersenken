@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
             SchiffsFelder = [], 
             StartFeld,
             SchiffE = [],
-            fields = document.querySelectorAll('#gameboardHome button'); // fields ist die Liste unserer Felder
+            fields = document.querySelectorAll('#gameboardHome button'), // fields ist die Liste unserer Felder
             fieldsE = document.querySelectorAll('#gameboardEnemy button'); // fields ist die Liste unserer Felder
 
         function markFieldH(e) {
@@ -178,40 +178,41 @@ document.addEventListener('DOMContentLoaded', function () {
                     for (let index = SchiffeH.length; index > 0; index--) {
                         const SchiffgroesseE = SchiffeH[index -1];
 
-                        StartFeld = Math.round(Math.random()*108)+12;//Zufalls Zahl zwischen 12 und 120
-                        SchiffE.push(StartFeld);
-                        var Richtung = Math.round(Math.random());//Zufalls Zahl 0 = waagerecht, 1 = senkrecht
-                        if (Richtung == 0) {
-                            for (let l = 1; l < SchiffgroesseE; l++) {
-                                SchiffE.push(StartFeld + l);
-                            }
-                        }
-                        if (Richtung == 1) {
-                            for (let l = 1; l < SchiffgroesseE; l++) {
-                                SchiffE.push(StartFeld + l*11);
-                            }
-                        }
+                        
+                        plaziereSchiffe (SchiffgroesseE)
                         //prüfung ob die Plazierung gültig ist
                         var Schiffgültig = true;
                         for (let i = 0; i < SchiffE.length -1; i++) {
                             sf = SchiffE[i];
-                            if ((fields[sf].disabled == true)||(sf > 120)) {Schiffgültig=false}
+                            if ((fieldsE[sf].disabled == true)||(sf > 120)) {Schiffgültig=false}
                         }
-                        if (Schiffgültig == true) { 
-                            for (let i = 0; i < SchiffE.length -1; i++) {
-                                sf = SchiffE[i];
-                                fieldsE[sf].setAttribute('aria-label', "c"); // das gewählte Feld wird gesetzt
-                                fieldsE[sf].disabled = true;
-                            } 
-                            
-                             
-                        }       
+                        if (!Schiffgültig)  {plaziereSchiffe(SchiffgroesseE)}
+                            else {
+                                for (let i = 0; i < SchiffE.length -1; i++) {
+                                    sf = SchiffE[i];
+                                    fieldsE[sf].setAttribute('aria-label', "c"); // das gewählte Feld wird gesetzt
+                                    fieldsE[sf].disabled = true;
+                                }    
+                            }       
                     }
                 }
             }    
         }
-
-
+        function plaziereSchiffe(SchiffgroesseE){
+            SchiffE = [];
+            StartFeld = Math.round(Math.random()*108)+12;//Zufalls Zahl zwischen 12 und 120
+            SchiffE.push(StartFeld);
+            var Richtung = Math.round(Math.random());
+            var factor = Richtung *10 + 1;
+            if ((factor == 1  && (StartFeld % 11 > 5)) || 
+                (factor == 11 && (StartFeld > 66))) {
+                 factor = factor *-1;
+            }
+            for (let l = 1; l < SchiffgroesseE; l++) {
+                SchiffE.push(StartFeld + l *factor);
+            }
+            SchiffE.sort();
+        }
         document.querySelector('#gameboardEnemy')
 		.addEventListener('click', markFieldE);
 
